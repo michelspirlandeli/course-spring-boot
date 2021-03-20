@@ -1,4 +1,4 @@
-package com.michel.course.entities.pk;
+package com.michel.course.entities;
 
 import java.io.Serializable;
 
@@ -6,22 +6,21 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import com.michel.course.entities.Order;
-import com.michel.course.entities.Product;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.michel.course.entities.pk.OrderItemPk;
 
 @Entity
 @Table(name = "tb_order_item")
 public class OrderItem implements Serializable {
-
 	private static final long serialVersionUID = 1L;
 
 	@EmbeddedId
-	private OrderItemPk id;
+	private OrderItemPk id = new OrderItemPk();
+	
 	private Integer quantity;
 	private Double price;
-
+	
 	public OrderItem() {
-		super();
 	}
 
 	public OrderItem(Order order, Product product, Integer quantity, Double price) {
@@ -32,6 +31,7 @@ public class OrderItem implements Serializable {
 		this.price = price;
 	}
 
+	@JsonIgnore
 	public Order getOrder() {
 		return id.getOrder();
 	}
@@ -64,6 +64,10 @@ public class OrderItem implements Serializable {
 		this.price = price;
 	}
 
+	public Double getSubTotal() {
+		return price * quantity;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -88,5 +92,4 @@ public class OrderItem implements Serializable {
 			return false;
 		return true;
 	}
-
 }
